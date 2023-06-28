@@ -1,0 +1,38 @@
+.background-image{
+    background-image: url(bkg.jpg);
+    width: 100vw;
+    height: 100vh;
+    background-position: center;
+    background-size: cover;
+}
+.table-setting{
+    display: flex;
+    justify-content: center;
+    /* text-align: center; */
+    /* margin: 1rem; */
+    /* width: 100vw; */
+    /* gap: 2rem; */
+}
+/* table {
+    border-collapse: collapse;
+    margin: 0.8rem;
+    width: 95%;
+}   */
+.right-aligned {
+    /* text-align: center; */
+    /* margin-left: 2rem; */
+    padding-left: 2rem;
+    width: 25vw;
+}
+
+.shaded {
+    background-color: rgba(32, 178, 170, 0.45);
+}
+.red-flag{
+    color: red;
+    font-weight: bold;
+}
+.spacing{
+    width: 5vw;
+    text-align: center;
+}

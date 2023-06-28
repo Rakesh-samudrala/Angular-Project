@@ -1,0 +1,97 @@
+<html>
+
+<header>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>          
+    <link rel="stylesheet" href="project.css">
+    <title>Bill Splitter</title>
+</header>
+<body class="background-image">
+
+<div ng-app="billsplitter" ng-controller="appController">
+    <form name="appForm">
+        <table>
+            <colgroup>
+                <col width="45%">
+                <col width="10%">
+                <col width="45%">
+            </colgroup>
+            <tr>
+                <td colspan="3">
+                    <h1>BILL SPLITTER</h1>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Bill amount</td>
+                <td><input type="number" min="1.0" required name="bill_amount" ng-model="bill_amount"></td>
+                <td class="right-aligned">{{ bill_amount | currency:"INR" }}<span class="red-flag" ng-show="appForm.bill_amount.$invalid">Required</span></td>        
+            </tr>
+
+            <tr>
+                <td>Tip%</td>
+                <td><input type="number" min="0" required name="tip" ng-model="tip"></td>
+                <td class="underlined right-aligned"> + {{ tip_amount | currency: "INR"}}<span class="red-flag" ng-show="appForm.tip.$invalid">Required</span</td>
+            </tr>
+
+            <tr>
+                <td colspan="2">Total</td>
+                <td class="right-aligned double-underlined">{{ total_amount | currency:"INR"}}</td>
+            </tr>
+
+            <tr>
+                <td>Party size</td>
+                <td><input type="number" min="1" required name="party_size" ng-model="party_size"></td>
+                <td class="right-aligned"><span class="red-flag" ng-show="appForm.party_size.$invalid">Required</span</td>
+            </tr>
+            
+            <tr>
+                <td class="" colspan="2">Each pays</td>
+                <td class="right-aligned">{{ per_party | currency: "INR"}}</td>
+            </tr>
+            <tr>
+                <td class="right-aligned" colspan="2"  ng-model="change ">
+                    <span style="color: green"; ng-show ="odd_change >0">Excess </span>
+                <span style="color: red;" ng-show="odd_change < 0">Short </span></td>
+                <td class="right-aligned" ng-show="odd_change!=0" >{{ odd_change | currency:"INR" }} </td>
+            </tr>
+        </table>
+        <div ng-show="appForm.bill_amount.$valid">
+            <table class="table-setting">
+                <colgroup>
+                    <col width="40%">
+                    <col width="50%">
+                </colgroup>
+                <tr >
+                    <td colspan="2"><h2>Tip table</h2></td>
+                
+                </tr>
+                <tr ng-repeat="per in tip_percentage_table">
+                    <td ng-if="$even" class=" shaded spacing">{{ per + "%" }} </td>
+                    <td ng-if="$even" class="shaded spacing">{{ calctip(bill_amount, per) | currency:"INR" }}</td>
+                    <td ng-if="$odd" class="spacing">{{ per + "%" }}</td>
+                    <td ng-if="$odd" class="spacing">{{ calctip(bill_amount, per) | currency:"INR" }}</td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</div>
+<script>
+    var app= angular.module("billsplitter",[]);
+    app.controller("appController",($scope)=>{
+        $scope.tip_percentage_table= [5, 10, 12, 15, 18, 20, 25];
+        $scope.calctip = (amount, percentage) => {
+            return(amount * percentage/100).toFixed(2);
+        }
+        $scope.$watchGroup(["bill_amount","tip","party_size"], ()=>{
+
+        
+        $scope.tip_amount = $scope.calctip($scope.bill_amount, $scope.tip);
+        $scope.total_amount = Number($scope.bill_amount) + Number($scope.tip_amount);
+        $scope.per_party =($scope.total_amount/$scope.party_size).toFixed(0);
+        $scope.odd_change=$scope.per_party * $scope.party_size - $scope.total_amount
+    });
+
+    });
+</script>
+</body>
+</html>
